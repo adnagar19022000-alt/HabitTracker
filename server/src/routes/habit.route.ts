@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { authenticate } from "../middleware/authenticate";
+import entryRoute from "./entry.route";
 import {
   createHabitHandler,
   listHabitsHandler,
@@ -118,5 +119,5 @@ router.patch("/:id", authenticate, updateHabitHandler);
  *         description: Habit not found
  */
 router.delete("/:id", authenticate, archiveHabitHandler);
-
+router.use("/:id/entries", entryRoute);
 export default router;
