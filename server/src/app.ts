@@ -3,6 +3,11 @@ import cors from "cors";
 import healthRoute from "./routes/health.route";
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "./lib/auth";
+import habitRoute from "./routes/habit.route";
+import swaggerUi from "swagger-ui-express";
+import { swaggerSpec } from "./functions/docs/swagger";
+import entryStandaloneRoute from "./routes/entryStandalone.route";
+import dashboardRoute from "./routes/dashboard.route";
 const app: Application = express();
 
 app.use(cors({
@@ -10,7 +15,10 @@ app.use(cors({
   credentials: true,
 }));
 app.all("/api/auth/*splat", toNodeHandler(auth));
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(express.json());
 app.use("/health", healthRoute);
-
+app.use("/api/habits", habitRoute);
+app.use("/api/entries", entryStandaloneRoute);
+app.use("/api/dashboard", dashboardRoute);
 export default app;
