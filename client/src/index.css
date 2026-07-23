@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg-main: #f6f7f9;
+  --bg-card: #ffffff;
+  --text-main: #111827;
+  --text-muted: #6b7280;
+  --primary-yellow: #ffd600;
+  --primary-yellow-hover: #e6c200;
+  --primary-yellow-light: #fffbea;
+  --border-light: #e5e7eb;
+  --radius-lg: 24px;
+  --radius-md: 16px;
+  --radius-sm: 12px;
+  --radius-full: 9999px;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+#root {
+  width: 100%;
+  max-width: 480px;
+  /* Mobile app container layout */
+  min-height: 100vh;
+  background-color: var(--bg-main);
+  position: relative;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 9999px;
+}
+
+/* Custom Yellow Checkbox & Radio Buttons */
+input[type="radio"] {
+  accent-color: var(--primary-yellow);
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+/* Custom Yellow Primary Button */
+.btn-primary {
+  background-color: var(--primary-yellow);
+  color: var(--text-main);
+  font-weight: 700;
+  font-size: 16px;
+  padding: 16px 24px;
+  border-radius: var(--radius-full);
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  transition: transform 0.15s ease, background-color 0.15s ease;
+  box-shadow: 0 4px 12px rgba(255, 214, 0, 0.3);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-yellow-hover);
+}
+
+/* Card Styles */
+.card {
+  background-color: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  border: 1px solid rgba(229, 231, 235, 0.6);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 16px;
+}
