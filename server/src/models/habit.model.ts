@@ -18,6 +18,8 @@ export interface IHabit extends Document {
     time?: string;
   };
   archived: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 const habitSchema = new Schema<IHabit>(
