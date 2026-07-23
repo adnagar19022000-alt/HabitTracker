@@ -5,6 +5,7 @@ import {
   createHabitHandler,
   listHabitsHandler,
   getHabitHandler,
+  getHabitStreakHandler,
   updateHabitHandler,
   archiveHabitHandler,
 } from "../controllers/habit.controller";
@@ -61,7 +62,7 @@ router.get("/", authenticate, listHabitsHandler);
  * @openapi
  * /api/habits/{id}:
  *   get:
- *     summary: Get a single habit by ID (own only)
+ *     summary: Get a single habit by ID (own only), includes computed current/best streak
  *     security:
  *       - cookieAuth: []
  *     parameters:
@@ -72,11 +73,32 @@ router.get("/", authenticate, listHabitsHandler);
  *           type: string
  *     responses:
  *       200:
- *         description: Habit found
+ *         description: Habit found, with streak object { current, best }
  *       404:
  *         description: Habit not found
  */
 router.get("/:id", authenticate, getHabitHandler);
+
+/**
+ * @openapi
+ * /api/habits/{id}/streak:
+ *   get:
+ *     summary: Get current/best streak for a habit (lightweight, standalone lookup)
+ *     security:
+ *       - cookieAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Streak data { current, best }
+ *       404:
+ *         description: Habit not found
+ */
+router.get("/:id/streak", authenticate, getHabitStreakHandler);
 
 /**
  * @openapi

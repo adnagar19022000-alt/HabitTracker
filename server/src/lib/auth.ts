@@ -5,6 +5,10 @@ import { MongoClient } from "mongodb";
 const client = new MongoClient(process.env.MONGODB_URI as string);
 const db = client.db();
 
+const ADMIN_EMAILS = [
+  "admin@habittracker.com",
+];
+
 export const auth = betterAuth({
     database: mongodbAdapter(db),
     baseURL: process.env.BETTER_AUTH_URL,
@@ -18,6 +22,23 @@ export const auth = betterAuth({
         type: "string",
         defaultValue: "user",
         input: false,
+      },
+    },
+  },
+    databaseHooks: {
+    user: {
+      create: {
+        before: async (user) => {
+          if (ADMIN_EMAILS.includes(user.email)) {
+            return {
+              data: {
+                ...user,
+                role: "admin",
+              },
+            };
+          }
+          return { data: user };
+        },
       },
     },
   },
