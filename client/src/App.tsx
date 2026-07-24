@@ -4,8 +4,12 @@ import { Register } from "./pages/auth/Register";
 import { Dashboard } from "./pages/Dashboard";
 import { AppLayout } from "./layout/AppLayout";
 import { HabitForm } from "./pages/habits/HabitForm";
+import { Settings } from "./pages/Settings";
+import { AdminUsers } from "./pages/admin/AdminUsers";
+import { AdminStats } from "./pages/admin/AdminStats";
 import ProtectedRoute from "./routes/ProtectedRoute";
-
+import AdminRoute from "./routes/AdminRoute";
+import { HabitDetail } from "./pages/habits/HabitDetail";
 function App() {
   return (
     <Routes>
@@ -17,6 +21,14 @@ function App() {
                   <Route path="/dashboard" element={<Dashboard />} />
                   <Route path="/habits/new" element={<HabitForm />} />
                   <Route path="/habits/:id/edit" element={<HabitForm />} />
+                  <Route path="/habits/:id" element={<HabitDetail />} />
+                  <Route path="/settings" element={<Settings />} />
+        
+
+       <Route element={<AdminRoute />}>
+            <Route path="/admin/users" element={<AdminUsers />} />
+            <Route path="/admin/stats" element={<AdminStats />} />
+          </Route>
         </Route>
       </Route>
 
