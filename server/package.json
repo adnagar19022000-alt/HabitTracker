@@ -13,6 +13,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@google/genai": "^2.13.0",
     "better-auth": "^1.6.23",
     "cors": "^2.8.6",
     "dotenv": "^16.4.5",

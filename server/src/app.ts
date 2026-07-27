@@ -11,6 +11,7 @@ import entryStandaloneRoute from "./routes/entryStandalone.route";
 import dashboardRoute from "./routes/dashboard.route";
 import authMeRoute from "./routes/auth.me.route";
 import adminRoute from "./routes/admin.route";
+import insightRoute from "./routes/insight.route";
 const app: Application = express();
 
 app.use(cors({
@@ -28,6 +29,7 @@ app.use("/health", healthRoute);
 app.use("/api/habits", habitRoute);
 app.use("/api/entries", entryStandaloneRoute);
 app.use("/api/dashboard", dashboardRoute);
+app.use("/api/insights", insightRoute);
 app.use("/api/admin", adminRoute);
 
 // Serve frontend in production
