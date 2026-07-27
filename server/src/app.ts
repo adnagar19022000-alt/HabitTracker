@@ -1,5 +1,6 @@
 import express, { Application } from "express";
 import cors from "cors";
+import path from "path";
 import healthRoute from "./routes/health.route";
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "./lib/auth";
@@ -28,4 +29,14 @@ app.use("/api/habits", habitRoute);
 app.use("/api/entries", entryStandaloneRoute);
 app.use("/api/dashboard", dashboardRoute);
 app.use("/api/admin", adminRoute);
+
+// Serve frontend in production
+if (process.env.NODE_ENV === "production") {
+  const clientDistPath = path.join(__dirname, "../../client/dist");
+  app.use(express.static(clientDistPath));
+  app.get("*", (req, res) => {
+    res.sendFile(path.join(clientDistPath, "index.html"));
+  });
+}
+
 export default app;
