@@ -1,3 +1,4 @@
+import { Insights } from "./pages/Insights";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { Login } from "./pages/auth/Login";
 import { Register } from "./pages/auth/Register";
@@ -11,6 +12,7 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import AdminRoute from "./routes/AdminRoute";
 import PublicRoute from "./routes/PublicRoute";
 import { HabitDetail } from "./pages/habits/HabitDetail";
+
 function App() {
   return (
     <Routes>
@@ -26,7 +28,7 @@ function App() {
                   <Route path="/habits/:id/edit" element={<HabitForm />} />
                   <Route path="/habits/:id" element={<HabitDetail />} />
                   <Route path="/settings" element={<Settings />} />
-        
+                  <Route path="/insights" element={<Insights />} />
 
        <Route element={<AdminRoute />}>
             <Route path="/admin/users" element={<AdminUsers />} />
