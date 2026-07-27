@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import { createHabit, getHabit, updateHabit, type HabitPayload } from "../../api/habits";
 import { getErrorMessage } from "../../api/client";
 import type { FrequencyType } from "../../types";
+import { toast } from "react-toastify";
 
 const CATEGORIES = [
   "Health",
@@ -222,12 +223,16 @@ export function HabitForm() {
             const payload = toPayload(values);
             if (isEdit && id) {
               await updateHabit(id, payload);
+              toast.success("Habit updated!");
             } else {
               await createHabit(payload);
+              toast.success("Habit created!");
             }
             navigate("/dashboard");
           } catch (err) {
-            setFormError(getErrorMessage(err));
+            const message = getErrorMessage(err);
+            toast.error(message);
+            setFormError(message);
           } finally {
             setSubmitting(false);
           }

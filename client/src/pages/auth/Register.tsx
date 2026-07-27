@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useAuth } from "../../context/AuthContext";
+import { toast } from "react-toastify";
 
 const RegisterSchema = Yup.object({
   name: Yup.string().trim().required("Name is required"),
@@ -36,9 +37,12 @@ export function Register() {
             setFormError(null);
             try {
               await register(values.name, values.email, values.password);
+              toast.success("Account created successfully!");
               navigate("/dashboard");
             } catch (err) {
-              setFormError(err instanceof Error ? err.message : "Registration failed");
+              const message = err instanceof Error ? err.message : "Registration failed";
+              toast.error(message);
+              setFormError(message);
             } finally {
               setSubmitting(false);
             }

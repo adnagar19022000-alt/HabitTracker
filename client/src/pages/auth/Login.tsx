@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useAuth } from "../../context/AuthContext";
+import { toast } from "react-toastify";
 
 const LoginSchema = Yup.object({
   email: Yup.string().email("Enter a valid email").required("Email is required"),
@@ -31,9 +32,12 @@ export function Login() {
             setFormError(null);
             try {
               await login(values.email, values.password);
+              toast.success("Welcome back!");
               navigate("/dashboard");
             } catch (err) {
-              setFormError(err instanceof Error ? err.message : "Login failed");
+              const message = err instanceof Error ? err.message : "Login failed";
+              toast.error(message);
+              setFormError(message);
             } finally {
               setSubmitting(false);
             }

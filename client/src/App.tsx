@@ -9,12 +9,15 @@ import { AdminUsers } from "./pages/admin/AdminUsers";
 import { AdminStats } from "./pages/admin/AdminStats";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import AdminRoute from "./routes/AdminRoute";
+import PublicRoute from "./routes/PublicRoute";
 import { HabitDetail } from "./pages/habits/HabitDetail";
 function App() {
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+      <Route element={<PublicRoute />}>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+      </Route>
 
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>

@@ -44,8 +44,18 @@ export async function calculateStreak(
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const habitStart = new Date(habit.createdAt || 0);
+    const habitStart = new Date(habit.createdAt || 0);
   habitStart.setHours(0, 0, 0, 0);
+
+  // 1. Find the oldest entry date logged by the user
+  let oldestEntryDate = habitStart.getTime();
+  if (entryDates.size > 0) {
+    oldestEntryDate = Math.min(...Array.from(entryDates));
+  }
+
+  // 2. Set the limit to whichever is older: habit creation OR the oldest entry
+  const startLimit = new Date(Math.min(habitStart.getTime(), oldestEntryDate));
+  startLimit.setHours(0, 0, 0, 0);
 
   let current = 0;
   let best = 0;
@@ -54,7 +64,8 @@ export async function calculateStreak(
 
   const cursor = new Date(today);
 
-  while (cursor >= habitStart) {
+  // 3. Loop until we hit the startLimit instead of habitStart
+  while (cursor >= startLimit) {
     const isToday = cursor.getTime() === today.getTime();
     const targetDay = isTargetDay(habit, cursor);
 
