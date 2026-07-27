@@ -108,3 +108,12 @@ export interface AdminStats {
 export interface ApiErrorShape {
   error: { code: string; message: string };
 }
+
+export interface Insight {
+  _id: string;
+  periodStart: string;
+  periodEnd: string;
+  cadence: string;
+  content: string;
+  generatedAt: string;
+}
