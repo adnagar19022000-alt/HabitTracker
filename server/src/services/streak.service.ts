@@ -39,7 +39,7 @@ export async function calculateStreak(
   habit: IHabit
 ): Promise<{ current: number; best: number }> {
   const entries = await Entry.find({ habitId: (habit as any)._id });
-  const entryDates = new Set(entries.map((e) => e.date.getTime()));
+  const entryDates = new Set(entries.map((e) => formatDateKey(e.date)));
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -66,11 +66,11 @@ export async function calculateStreak(
 
   // 3. Loop until we hit the startLimit instead of habitStart
   while (cursor >= startLimit) {
-    const isToday = cursor.getTime() === today.getTime();
+    const isToday = formatDateKey(cursor) === formatDateKey(today);
     const targetDay = isTargetDay(habit, cursor);
 
     if (targetDay) {
-      const hasEntry = entryDates.has(cursor.getTime());
+      const hasEntry = entryDates.has(formatDateKey(cursor));
 
       if (hasEntry) {
         running++;
