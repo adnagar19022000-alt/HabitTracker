@@ -49,8 +49,8 @@ export async function calculateStreak(
 
   // 1. Find the oldest entry date logged by the user
   let oldestEntryDate = habitStart.getTime();
-  if (entryDates.size > 0) {
-    oldestEntryDate = Math.min(...Array.from(entryDates));
+  if (entries.length > 0) {
+    oldestEntryDate = Math.min(...entries.map((e) => e.date.getTime()));
   }
 
   // 2. Set the limit to whichever is older: habit creation OR the oldest entry
