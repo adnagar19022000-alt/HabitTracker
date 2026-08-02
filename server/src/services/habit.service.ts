@@ -4,6 +4,12 @@ export async function createHabit(
   userId: string,
   data: Partial<IHabit>
 ): Promise<IHabit> {
+  if (data.title) {
+    const existing = await Habit.findOne({ userId, title: data.title });
+    if (existing) {
+      throw new Error("A habit with this title already exists.");
+    }
+  }
   return Habit.create({ ...data, userId });
 }
 

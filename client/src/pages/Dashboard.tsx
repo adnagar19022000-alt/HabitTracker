@@ -63,7 +63,7 @@ export function Dashboard() {
 
       <DayStrip days={data.dayStrip} onSelect={(date) => load(date)} />
 
-      <div className="card flex items-center justify-between">
+      <div className="card flex flex-wrap items-center justify-between gap-4">
         <div>
           <p className="text-sm text-slate">Today's completion</p>
           <p className="font-display text-3xl font-semibold">
@@ -83,8 +83,8 @@ export function Dashboard() {
         )}
 
         {data.habits.map((habit) => (
-          <div key={habit.id} className="card flex items-center justify-between gap-4">
-            <Link to={`/habits/${habit.id}`} className="flex flex-1 items-center gap-4">
+          <div key={habit.id} className="card flex flex-col sm:flex-row items-center justify-between gap-4">
+            <Link to={`/habits/${habit.id}`} className="flex flex-1 items-center gap-4 w-full sm:w-auto overflow-hidden">
               <span
                 className="flex h-10 w-10 items-center justify-center rounded-md text-lg"
                 style={{ backgroundColor: `${habit.color}22` }}

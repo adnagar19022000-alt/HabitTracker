@@ -246,7 +246,8 @@ export function HabitForm() {
             setFieldValue("days", next);
           };
 
-          const goNext = async () => {
+          const goNext = async (e: React.MouseEvent) => {
+            e.preventDefault();
             const allErrors = await validateForm();
             const fieldsThisStep = STEP_FIELDS[step];
             const stepTouched = Object.fromEntries(fieldsThisStep.map((f) => [f, true]));
@@ -256,7 +257,10 @@ export function HabitForm() {
             if (!hasError) setStep((s) => Math.min(s + 1, STEP_LABELS.length - 1));
           };
 
-          const goBack = () => setStep((s) => Math.max(s - 1, 0));
+          const goBack = (e: React.MouseEvent) => {
+            e.preventDefault();
+            setStep((s) => Math.max(s - 1, 0));
+          };
 
           return (
             <Form className="space-y-5" noValidate>
@@ -483,7 +487,14 @@ export function HabitForm() {
               <div className="flex items-center justify-between pt-2">
                 <button
                   type="button"
-                  onClick={() => (step === 0 ? navigate(-1) : goBack())}
+                  onClick={(e) => {
+                    if (step === 0) {
+                      e.preventDefault();
+                      navigate(-1);
+                    } else {
+                      goBack(e);
+                    }
+                  }}
                   className="btn-secondary"
                 >
                   {step === 0 ? "Cancel" : "Back"}

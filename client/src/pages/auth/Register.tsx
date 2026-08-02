@@ -10,6 +10,10 @@ const RegisterSchema = Yup.object({
   email: Yup.string().email("Enter a valid email").required("Email is required"),
   password: Yup.string()
     .min(8, "Use at least 8 characters")
+    .matches(/[A-Z]/, "Must contain at least one uppercase letter")
+    .matches(/[a-z]/, "Must contain at least one lowercase letter")
+    .matches(/[0-9]/, "Must contain at least one number")
+    .matches(/[\W_]/, "Must contain at least one special character")
     .required("Password is required"),
 });
 
@@ -37,7 +41,9 @@ export function Register() {
           onSubmit={async (values, { setSubmitting }) => {
             setFormError(null);
             try {
-              await register(values.name, values.email, values.password);
+              const safeName = values.name.trim();
+              const safeEmail = values.email.trim().toLowerCase();
+              await register(safeName, safeEmail, values.password);
               toast.success("Account created successfully!");
               navigate("/dashboard");
             } catch (err) {

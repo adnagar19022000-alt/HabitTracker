@@ -1,0 +1,44 @@
+Test Case ID,Title,Module,Priority,Precondtions,Test Data,Steps,Expected Results,Actual Result,Status
+TC_001,Email field accepts fake/non-existent domain names,Registration / Authentication,High,User is on the Sign Up / Registration page,"Invalid domains:
+- user@fakedomain123.xyz
+- test@notarealsite.com
+- admin@abcxyz.qwe
+Valid domain (for comparison):
+- user@gmail.com","1. Go to registration page
+2. Enter a valid-looking email with a fake/non-existent domain
+3. Fill remaining fields correctly
+4. Submit the form",System should validate that the domain name is authentic/real (e.g. via MX record or domain check) and reject the email if the domain does not exist,System accepts the email even when the domain does not exist; no domain authenticity check is performed,Fail
+TC_002,Password policy not fully enforced (missing capital letter & special character checks),Registration / Authentication,High,User is on the Sign Up / Change Password page,"Weak passwords (missing criteria):
+- password1 (no capital, no special char)
+- Password1 (no special char)
+- password! (no capital)
+- PASSWORD! (no lowercase/number)
+Strong password (for comparison):
+- Password@123","1. Go to registration / change password page
+2. Enter a password that does not contain a capital letter and does not contain a special character
+3. Submit the form","System should reject the password and show an error stating all password criteria (capital letter, special character, number, minimum length, etc.) must be met",System does not fully validate password criteria; passwords missing capital letters and/or special characters are accepted,Fail
+TC_003,Admin changes to a request do not immediately refresh corresponding user page,Admin Panel,High,Admin is logged in and viewing a user's request; user has the corresponding page open,"Ticket ID: TCK_1001
+Admin login: lipika@gmail.com / lipika123
+User login: ram@gmail.com / ram@1234
+Change made: Status updated from 'Pending' to 'Resolved'","1. Login as admin
+2. Open a user's request/ticket
+3. Make a change (e.g. update status/response) to the request
+4. Check the corresponding user's page/ticket in real time","The change made by admin should immediately reflect/refresh on the corresponding user's page under user tickets and requests, without the user needing to manually refresh",The user page/tickets and requests section does not refresh automatically; changes are not reflected until the user manually refreshes,Fail
+TC_004,No public route available,Routing / Access Control,Medium,Application is deployed and accessible,"URLs tested:
+- /home (public)
+- /about (public)
+- /pricing (public)
+Current state: all routes require login, no public URL accessible","1. Access the application without logging in
+2. Try to navigate to pages that should be publicly accessible",Application should have a public route/landing page accessible without login,No public route exists in the application,Fail
+TC_005,AI chatbot does not retain context of previous chat,AI Chatbot,High,User has an ongoing conversation with the AI chatbot,"Chat Turn 1: ""How many request are pending?""
+Chat Turn 2 (follow-up): ""give me the user Id of the request?""
+Expected: AI should know 'it' refers to Plan A from Turn 1","1. Start a conversation with the AI
+2. Ask a question and receive a response
+3. Ask a follow-up question that depends on the previous message
+4. Observe AI's response",AI should retain the context of the previous chat/messages and respond accordingly to follow-up questions,AI does not have the context of the previous chat; follow-up questions are answered without considering prior conversation,Fail
+TC_006,AI custom query feature not working,AI Chatbot,High,User is on the AI chatbot / custom query section,"Custom queries tested:
+- ""jfjewriuiruhifuirdvhi""
+- ""List tickets with status = open""
+- ""Count of high priority requests""","1. Navigate to AI custom query section
+2. Enter a custom query
+3. Submit the query",AI should process the custom query and return a relevant response,Custom query does not work / does not return expected response,Fail
