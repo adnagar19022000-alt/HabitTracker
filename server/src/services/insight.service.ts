@@ -8,22 +8,34 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 export async function generateInsight(
   userId: string,
-  cadence: "daily" | "weekly" | "monthly" | "custom",
+  cadence: "daily" | "weekly" | "monthly" | "custom" = "weekly",
   customPrompt?: string
 ) {
-  // 1. Calculate the date range based on the requested cadence
+  // 1. Calculate the date range based on cadence
   const periodEnd = new Date();
   const periodStart = new Date();
-  
-  if (cadence === "daily") periodStart.setDate(periodEnd.getDate() - 1);
-  else if (cadence === "monthly") periodStart.setDate(periodEnd.getDate() - 30);
-  else periodStart.setDate(periodEnd.getDate() - 7); // Default to 7 days for weekly/custom
+
+  switch (cadence) {
+    case "daily":
+      periodStart.setDate(periodEnd.getDate() - 1);
+      break;
+    case "weekly":
+      periodStart.setDate(periodEnd.getDate() - 7);
+      break;
+    case "monthly":
+      periodStart.setMonth(periodEnd.getMonth() - 1);
+      break;
+    case "custom":
+      // For custom questions, look at the last 30 days of data
+      periodStart.setDate(periodEnd.getDate() - 30);
+      break;
+  }
 
   // 2. Fetch the user's habits and recent check-ins
   const habits = await Habit.find({ userId, archived: false }).lean();
   const entries = await Entry.find({
     userId,
-    date: { $gte: periodStart, $lte: periodEnd }
+    date: { $gte: periodStart, $lte: periodEnd },
   }).lean();
 
   if (habits.length === 0) {
@@ -31,27 +43,39 @@ export async function generateInsight(
   }
 
   // 3. Prepare the data for the AI to read
-  const habitSummary = habits.map(h => `- ${h.title} (${h.category})`).join("\n");
+  const habitSummary = habits.map((h) => `- ${h.title} (${h.category})`).join("\n");
   const entryCount = entries.length;
 
-  // 4. Build the dynamic prompt
-  let prompt = `
-    You are an encouraging habit-tracking coach. 
-    Look at your client's data for their requested time period:
-    - Active Habits: \n${habitSummary}
-    - Total check-ins during this period: ${entryCount}
-  `;
+  // 4. Build the prompt based on cadence
+  let prompt: string;
 
-  if (customPrompt && customPrompt.trim() !== "") {
-    // If the user asked a specific question
-    prompt += `\n\nThe client has asked you a specific question: "${customPrompt}"\n`;
-    prompt += `Write a helpful, direct response to their question based on their habit data. Do not use generic AI greetings. Keep it under 3 paragraphs.`;
+  if (cadence === "custom" && customPrompt) {
+    prompt = `
+      You are a helpful habit-tracking coach. Your client has asked you a question.
+      Here is their habit data from the last 30 days:
+      - Active Habits:\n${habitSummary}
+      - Total check-ins in the last 30 days: ${entryCount}
+
+      Their question: "${customPrompt}"
+
+      Answer their question directly and helpfully based on their data.
+      Be specific and actionable. Do not use generic AI greetings.
+    `;
   } else {
-    // Standard periodic review
-    prompt += `\n\nWrite a short, highly motivating 2-paragraph summary of their progress. 
-    In the first paragraph, praise their effort. 
-    In the second paragraph, give them a gentle, actionable tip.
-    Do not use generic AI greetings.`;
+    const periodLabel =
+      cadence === "daily" ? "today" : cadence === "weekly" ? "the last 7 days" : "the last month";
+
+    prompt = `
+      You are an encouraging habit-tracking coach.
+      Look at your client's data for ${periodLabel}:
+      - Active Habits:\n${habitSummary}
+      - Total times they checked in to a habit during this period: ${entryCount}
+
+      Write a short, highly motivating 2-paragraph summary of their ${cadence} progress.
+      In the first paragraph, praise their effort.
+      In the second paragraph, give them a gentle, actionable tip to keep their momentum going.
+      Do not use generic AI greetings, just give the insight directly.
+    `;
   }
 
   // 5. Send the prompt to Gemini
@@ -62,7 +86,7 @@ export async function generateInsight(
 
   const aiContent = response.text || "Keep up the great work!";
 
-  // 6. Save the generated insight
+  // 6. Save the generated insight to the database
   const newInsight = await Insight.create({
     userId,
     periodStart,

@@ -7,6 +7,7 @@ const db = client.db();
 
 const ADMIN_EMAILS = [
   "admin@habittracker.com",
+  "hima@gmail.com",
 ];
 
 export const auth = betterAuth({
