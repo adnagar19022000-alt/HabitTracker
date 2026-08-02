@@ -46,7 +46,7 @@ export function Insights() {
       const { data } = await api.post<Insight>("/api/insights/generate", body);
       setInsights((prev) => [data, ...prev]);
       toast.success("AI Insight generated successfully! ✨");
-      setCustomPrompt(""); // Clear the input after success
+      setCustomPrompt("");
     } catch (err) {
       toast.error(getErrorMessage(err));
     } finally {
