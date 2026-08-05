@@ -16,6 +16,7 @@ export function getErrorMessage(error: unknown): string {
   if (axios.isAxiosError(error)) {
     const data = error.response?.data;
     if (data?.error?.message) return data.error.message;
+    if (data?.message) return data.message;
     if (typeof data === "string") return data;
     return error.message;
   }

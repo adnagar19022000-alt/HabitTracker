@@ -238,7 +238,7 @@ export function HabitForm() {
           }
         }}
       >
-        {({ values, touched, setFieldValue, validateForm, setTouched, isSubmitting }) => {
+        {({ values, touched, setFieldValue, validateForm, setTouched, isSubmitting, dirty, errors, handleSubmit }) => {
           const toggleDay = (day: number) => {
             const next = values.days.includes(day)
               ? values.days.filter((d) => d !== day)
@@ -246,7 +246,8 @@ export function HabitForm() {
             setFieldValue("days", next);
           };
 
-          const goNext = async () => {
+          const goNext = async (e: React.MouseEvent) => {
+            e.preventDefault();
             const allErrors = await validateForm();
             const fieldsThisStep = STEP_FIELDS[step];
             const stepTouched = Object.fromEntries(fieldsThisStep.map((f) => [f, true]));
@@ -256,10 +257,23 @@ export function HabitForm() {
             if (!hasError) setStep((s) => Math.min(s + 1, STEP_LABELS.length - 1));
           };
 
-          const goBack = () => setStep((s) => Math.max(s - 1, 0));
+          const goBack = (e: React.MouseEvent) => {
+            e.preventDefault();
+            setStep((s) => Math.max(s - 1, 0));
+          };
 
           return (
-            <Form className="space-y-5" noValidate>
+            <Form 
+              className="space-y-5" 
+              noValidate 
+              onKeyDown={(e) => {
+                // Prevent implicit form submission on Enter key on earlier steps
+                if (e.key === "Enter" && step < STEP_LABELS.length - 1) {
+                  e.preventDefault();
+                  goNext(e as any);
+                }
+              }}
+            >
               {step === 0 && (
                 <>
                   <div>
@@ -480,10 +494,25 @@ export function HabitForm() {
                 <p className="rounded-md bg-clay/10 px-3 py-2 text-sm text-clay-dark">{formError}</p>
               )}
 
+              {/* Debug validation errors */}
+              {Object.keys(errors).length > 0 && (
+                <div className="rounded-md bg-clay/10 px-3 py-2 text-sm text-clay-dark">
+                  <strong>Hidden Validation Errors:</strong>
+                  <pre>{JSON.stringify(errors, null, 2)}</pre>
+                </div>
+              )}
+
               <div className="flex items-center justify-between pt-2">
                 <button
                   type="button"
-                  onClick={() => (step === 0 ? navigate(-1) : goBack())}
+                  onClick={(e) => {
+                    if (step === 0) {
+                      e.preventDefault();
+                      navigate(-1);
+                    } else {
+                      goBack(e);
+                    }
+                  }}
                   className="btn-secondary"
                 >
                   {step === 0 ? "Cancel" : "Back"}
@@ -494,7 +523,20 @@ export function HabitForm() {
                     Next
                   </button>
                 ) : (
-                  <button type="submit" disabled={isSubmitting} className="btn-primary">
+                  <button 
+                    type="button" 
+                    disabled={isSubmitting} 
+                    className="btn-primary"
+                    onClick={() => {
+                      if (Object.keys(errors).length > 0) {
+                        alert("Please fix the hidden errors: " + JSON.stringify(errors));
+                      } else {
+                        // Manually submit the form to bypass any implicit HTML issues
+                        const syntheticEvent = { preventDefault: () => {} } as React.FormEvent<HTMLFormElement>;
+                        handleSubmit(syntheticEvent);
+                      }
+                    }}
+                  >
                     {isSubmitting ? "Saving…" : isEdit ? "Save changes" : "Create habit"}
                   </button>
                 )}
