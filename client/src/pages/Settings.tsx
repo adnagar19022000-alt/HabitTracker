@@ -45,7 +45,13 @@ export function Settings() {
     },
     validationSchema: Yup.object({
       currentPassword: Yup.string().required("Current password is required"),
-      newPassword: Yup.string().required("New password is required").min(8, "Must be at least 8 characters"),
+      newPassword: Yup.string()
+        .min(8, "Use at least 8 characters")
+        .matches(/[A-Z]/, "Must contain at least one uppercase letter")
+        .matches(/[a-z]/, "Must contain at least one lowercase letter")
+        .matches(/[0-9]/, "Must contain at least one number")
+        .matches(/[\W_]/, "Must contain at least one special character")
+        .required("New password is required"),
     }),
     onSubmit: async (values, { resetForm }) => {
       setPasswordError("");
