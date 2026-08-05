@@ -218,10 +218,6 @@ export function HabitForm() {
         initialValues={initial}
         validationSchema={HabitSchema}
         onSubmit={async (values, { setSubmitting }) => {
-          if (isEdit && !dirty) {
-            navigate("/dashboard");
-            return;
-          }
           setFormError(null);
           try {
             const payload = toPayload(values);
@@ -242,7 +238,7 @@ export function HabitForm() {
           }
         }}
       >
-        {({ values, touched, setFieldValue, validateForm, setTouched, isSubmitting, dirty }) => {
+        {({ values, touched, setFieldValue, validateForm, setTouched, isSubmitting, dirty, errors, handleSubmit }) => {
           const toggleDay = (day: number) => {
             const next = values.days.includes(day)
               ? values.days.filter((d) => d !== day)
@@ -498,6 +494,14 @@ export function HabitForm() {
                 <p className="rounded-md bg-clay/10 px-3 py-2 text-sm text-clay-dark">{formError}</p>
               )}
 
+              {/* Debug validation errors */}
+              {Object.keys(errors).length > 0 && (
+                <div className="rounded-md bg-clay/10 px-3 py-2 text-sm text-clay-dark">
+                  <strong>Hidden Validation Errors:</strong>
+                  <pre>{JSON.stringify(errors, null, 2)}</pre>
+                </div>
+              )}
+
               <div className="flex items-center justify-between pt-2">
                 <button
                   type="button"
@@ -519,8 +523,21 @@ export function HabitForm() {
                     Next
                   </button>
                 ) : (
-                  <button type="submit" disabled={isSubmitting} className="btn-primary">
-                    {isSubmitting ? "Saving…" : isEdit ? (dirty ? "Save changes" : "No changes to save") : "Create habit"}
+                  <button 
+                    type="button" 
+                    disabled={isSubmitting} 
+                    className="btn-primary"
+                    onClick={() => {
+                      if (Object.keys(errors).length > 0) {
+                        alert("Please fix the hidden errors: " + JSON.stringify(errors));
+                      } else {
+                        // Manually submit the form to bypass any implicit HTML issues
+                        const syntheticEvent = { preventDefault: () => {} } as React.FormEvent<HTMLFormElement>;
+                        handleSubmit(syntheticEvent);
+                      }
+                    }}
+                  >
+                    {isSubmitting ? "Saving…" : isEdit ? "Save changes" : "Create habit"}
                   </button>
                 )}
               </div>
