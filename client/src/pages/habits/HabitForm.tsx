@@ -238,7 +238,7 @@ export function HabitForm() {
           }
         }}
       >
-        {({ values, touched, setFieldValue, validateForm, setTouched, isSubmitting, dirty, errors, handleSubmit }) => {
+        {({ values, touched, setFieldValue, validateForm, setTouched, isSubmitting, errors, handleSubmit }) => {
           const toggleDay = (day: number) => {
             const next = values.days.includes(day)
               ? values.days.filter((d) => d !== day)
