@@ -218,6 +218,10 @@ export function HabitForm() {
         initialValues={initial}
         validationSchema={HabitSchema}
         onSubmit={async (values, { setSubmitting }) => {
+          if (isEdit && !dirty) {
+            navigate("/dashboard");
+            return;
+          }
           setFormError(null);
           try {
             const payload = toPayload(values);
@@ -238,7 +242,7 @@ export function HabitForm() {
           }
         }}
       >
-        {({ values, touched, setFieldValue, validateForm, setTouched, isSubmitting }) => {
+        {({ values, touched, setFieldValue, validateForm, setTouched, isSubmitting, dirty }) => {
           const toggleDay = (day: number) => {
             const next = values.days.includes(day)
               ? values.days.filter((d) => d !== day)
@@ -263,7 +267,17 @@ export function HabitForm() {
           };
 
           return (
-            <Form className="space-y-5" noValidate>
+            <Form 
+              className="space-y-5" 
+              noValidate 
+              onKeyDown={(e) => {
+                // Prevent implicit form submission on Enter key on earlier steps
+                if (e.key === "Enter" && step < STEP_LABELS.length - 1) {
+                  e.preventDefault();
+                  goNext(e as any);
+                }
+              }}
+            >
               {step === 0 && (
                 <>
                   <div>
@@ -506,7 +520,7 @@ export function HabitForm() {
                   </button>
                 ) : (
                   <button type="submit" disabled={isSubmitting} className="btn-primary">
-                    {isSubmitting ? "Saving…" : isEdit ? "Save changes" : "Create habit"}
+                    {isSubmitting ? "Saving…" : isEdit ? (dirty ? "Save changes" : "No changes to save") : "Create habit"}
                   </button>
                 )}
               </div>
