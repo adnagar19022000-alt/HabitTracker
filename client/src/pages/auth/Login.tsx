@@ -32,8 +32,7 @@ export function Login() {
           onSubmit={async (values, { setSubmitting }) => {
             setFormError(null);
             try {
-              const safeEmail = values.email.trim().toLowerCase();
-              await login(safeEmail, values.password);
+              await login(values.email, values.password);
               toast.success("Welcome back!");
               navigate("/dashboard");
             } catch (err) {
