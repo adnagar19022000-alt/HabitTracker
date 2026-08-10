@@ -18,6 +18,18 @@ export async function generateInsightHandler(req: Request, res: Response) {
     const insight = await generateInsight(userId, cadence, customPrompt);
     res.json(insight);
   } catch (error: any) {
-    res.status(400).json({ error: { message: error.message } });
+    let message = error.message || "Failed to generate insight";
+    
+    // Check if the error is a raw AI service error (e.g. 503 UNAVAILABLE, 429 Resource Exhausted)
+    if (message.includes("503") || message.includes("UNAVAILABLE") || message.includes("overloaded")) {
+      message = "AI service is temporarily unavailable. Please try again later.";
+    } else if (message.includes("429") || message.includes("quota")) {
+      message = "AI service is currently busy. Please try again in a few minutes.";
+    }
+    
+    // Determine appropriate status code
+    const status = message.includes("unavailable") || message.includes("busy") ? 503 : 400;
+    
+    res.status(status).json({ error: { message } });
   }
 }
