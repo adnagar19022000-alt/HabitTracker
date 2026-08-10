@@ -494,14 +494,6 @@ export function HabitForm() {
                 <p className="rounded-md bg-clay/10 px-3 py-2 text-sm text-clay-dark">{formError}</p>
               )}
 
-              {/* Debug validation errors */}
-              {Object.keys(errors).length > 0 && (
-                <div className="rounded-md bg-clay/10 px-3 py-2 text-sm text-clay-dark">
-                  <strong>Hidden Validation Errors:</strong>
-                  <pre>{JSON.stringify(errors, null, 2)}</pre>
-                </div>
-              )}
-
               <div className="flex items-center justify-between pt-2">
                 <button
                   type="button"
