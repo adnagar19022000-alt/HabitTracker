@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, HydratedDocument } from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 export interface IEntry extends Document {
   habitId: string;
   userId: string;
