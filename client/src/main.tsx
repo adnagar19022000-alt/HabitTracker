@@ -5,10 +5,8 @@ import './index.css'
 import App from './App.tsx'
 import { AuthProvider } from './context/AuthContext'
 import { ErrorBoundary } from './components/ErrorBoundary'
-
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
-
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <ErrorBoundary>
@@ -21,3 +19,5 @@ createRoot(document.getElementById('root')!).render(
         </ErrorBoundary>
     </StrictMode>,
 )
+        
+

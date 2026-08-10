@@ -83,35 +83,40 @@ export function Dashboard() {
         )}
 
         {data.habits.map((habit) => (
-          <div key={habit.id} className="card flex flex-col sm:flex-row items-center justify-between gap-4">
-            <Link to={`/habits/${habit.id}`} className="flex flex-1 items-center gap-4 w-full sm:w-auto overflow-hidden">
+          <div key={habit.id} className="card flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all">
+            <Link to={`/habits/${habit.id}`} className="flex flex-1 items-center gap-4 min-w-0 w-full">
               <span
-                className="flex h-10 w-10 items-center justify-center rounded-md text-lg"
+                className="flex shrink-0 h-10 w-10 items-center justify-center rounded-md text-lg"
                 style={{ backgroundColor: `${habit.color}22` }}
               >
                 {habit.icon}
               </span>
-              <div className="flex-1">
-                <p className="font-medium">{habit.title}</p>
-                <p className="text-xs text-slate">{habit.category}</p>
+              <div className="flex-1 min-w-0">
+                <p className="font-medium truncate">{habit.title}</p>
+                <p className="text-xs text-slate truncate">{habit.category}</p>
               </div>
-              <MiniHeatmap entries={habit.miniHeatmap} />
             </Link>
 
-            {habit.isScheduledOnSelectedDate && (
-              <button
-                onClick={() => quickLog(habit.id)}
-                disabled={habit.isCompletedOnSelectedDate || loggingId === habit.id}
-                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full border text-sm transition-colors ${
-                  habit.isCompletedOnSelectedDate
-                    ? "border-moss bg-moss text-paper"
-                    : "border-ink/20 hover:border-moss hover:text-moss"
-                }`}
-                aria-label={habit.isCompletedOnSelectedDate ? "Completed" : "Mark done"}
-              >
-                {habit.isCompletedOnSelectedDate ? "✓" : ""}
-              </button>
-            )}
+            <div className="flex items-center gap-4 sm:shrink-0 w-full sm:w-auto justify-between sm:justify-end border-t sm:border-t-0 pt-3 sm:pt-0 border-clay/10">
+              <div className="shrink-0 overflow-hidden">
+                <MiniHeatmap entries={habit.miniHeatmap} />
+              </div>
+              
+              {habit.isScheduledOnSelectedDate && (
+                <button
+                  onClick={() => quickLog(habit.id)}
+                  disabled={habit.isCompletedOnSelectedDate || loggingId === habit.id}
+                  className={`flex shrink-0 h-9 w-9 items-center justify-center rounded-full border text-sm transition-colors ${
+                    habit.isCompletedOnSelectedDate
+                      ? "border-moss bg-moss text-paper"
+                      : "border-ink/20 hover:border-moss hover:text-moss"
+                  }`}
+                  aria-label={habit.isCompletedOnSelectedDate ? "Completed" : "Mark done"}
+                >
+                  {habit.isCompletedOnSelectedDate ? "✓" : ""}
+                </button>
+              )}
+            </div>
           </div>
         ))}
       </div>

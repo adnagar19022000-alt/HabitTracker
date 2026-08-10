@@ -1,9 +1,9 @@
+import { toast } from "react-toastify";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useAuth } from "../../context/AuthContext";
-import { toast } from "react-toastify";
 
 const LoginSchema = Yup.object({
   email: Yup.string().email("Enter a valid email").required("Email is required"),
@@ -13,8 +13,9 @@ const LoginSchema = Yup.object({
 export function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
+  // We are keeping this in case you still want to show the red box error as well,
+  // but if you only want the toast, you can delete this state!
   const [formError, setFormError] = useState<string | null>(null);
-  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-paper px-6">
@@ -26,6 +27,7 @@ export function Login() {
           <p className="mt-2 text-sm text-slate">Log in to keep your streak going.</p>
         </div>
 
+        {/* THIS IS THE PART YOU ARE REPLACING */}
         <Formik
           initialValues={{ email: "", password: "" }}
           validationSchema={LoginSchema}
@@ -33,12 +35,16 @@ export function Login() {
             setFormError(null);
             try {
               await login(values.email, values.password);
+              
+              // 1. Success Toast
               toast.success("Welcome back!");
-              navigate("/dashboard");
+              
+              navigate("/dashboard", { replace: true });
             } catch (err) {
+              // 2. Error Toast
               const message = err instanceof Error ? err.message : "Login failed";
               toast.error(message);
-              setFormError(message);
+              setFormError(message); // Optional: updates the red error box below the form
             } finally {
               setSubmitting(false);
             }
@@ -54,23 +60,7 @@ export function Login() {
 
               <div>
                 <label htmlFor="password" className="field-label">Password</label>
-                <div className="relative">
-                  <Field 
-                    id="password" 
-                    name="password" 
-                    type={showPassword ? "text" : "password"} 
-                    className="field-input pr-12" 
-                    placeholder="••••••••" 
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-sm font-medium text-slate hover:text-ink focus:outline-none"
-                    tabIndex={-1}
-                  >
-                    {showPassword ? "Hide" : "Show"}
-                  </button>
-                </div>
+                <Field id="password" name="password" type="password" className="field-input" placeholder="••••••••" />
                 <ErrorMessage name="password" component="p" className="field-error" />
               </div>
 

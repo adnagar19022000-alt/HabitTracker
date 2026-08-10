@@ -45,59 +45,57 @@ export function AdminUsers() {
       </div>
 
       {/* Users Table */}
-      <div className="card overflow-hidden !p-0">
-        <table className="w-full text-left text-sm">
-          <thead className="bg-ink/5 text-slate">
-            <tr>
-              <th className="px-6 py-3 font-medium">Name</th>
-              <th className="px-6 py-3 font-medium">Email</th>
-              <th className="px-6 py-3 font-medium">Role</th>
-              <th className="px-6 py-3 font-medium">Habits</th>
-              <th className="px-6 py-3 font-medium">Joined</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-ink/10">
-            {loading && users.length === 0 ? (
-              // Loading state
+      <div className="card overflow-hidden !p-0 border-clay/20">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm whitespace-nowrap">
+            <thead className="bg-ink/5 text-slate">
               <tr>
-                <td colSpan={5} className="px-6 py-8 text-center text-slate">
-                  Loading users...
-                </td>
+                <th className="px-6 py-3 font-medium">Name</th>
+                <th className="px-6 py-3 font-medium">Email</th>
+                <th className="px-6 py-3 font-medium">Role</th>
+                <th className="px-6 py-3 font-medium">Habits</th>
+                <th className="px-6 py-3 font-medium">Joined</th>
               </tr>
-            ) : users.length === 0 ? (
-              // No results state
-              <tr>
-                <td colSpan={5} className="px-6 py-8 text-center text-slate">
-                  No users found matching "{search}"
-                </td>
-              </tr>
-            ) : (
-              // Data rows
-              users.map((u) => (
-                <tr key={u.id} className="transition-colors hover:bg-ink/5">
-                  <td className="px-6 py-4 font-medium">{u.name}</td>
-                  <td className="px-6 py-4 text-slate">{u.email}</td>
-                  <td className="px-6 py-4">
-                    {/* Badge for role */}
-                    <span
-                      className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
-                        u.role === "admin"
-                          ? "bg-sun/20 text-sun"
-                          : "bg-ink/10 text-slate"
-                      }`}
-                    >
-                      {u.role}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4">{u.habitCount}</td>
-                  <td className="px-6 py-4 text-slate">
-                    {new Date(u.joinDate).toLocaleDateString()}
+            </thead>
+            <tbody className="divide-y divide-ink/10">
+              {loading && users.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="px-6 py-8 text-center text-slate">
+                    Loading users...
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : users.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="px-6 py-8 text-center text-slate">
+                    No users found matching "{search}"
+                  </td>
+                </tr>
+              ) : (
+                users.map((u) => (
+                  <tr key={u.id} className="transition-colors hover:bg-ink/5">
+                    <td className="px-6 py-4 font-medium">{u.name}</td>
+                    <td className="px-6 py-4 text-slate">{u.email}</td>
+                    <td className="px-6 py-4">
+                      <span
+                        className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
+                          u.role === "admin"
+                            ? "bg-sun/20 text-sun"
+                            : "bg-ink/10 text-slate"
+                        }`}
+                      >
+                        {u.role}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">{u.habitCount}</td>
+                    <td className="px-6 py-4 text-slate">
+                      {new Date(u.joinDate).toLocaleDateString()}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
