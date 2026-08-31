@@ -28,7 +28,7 @@ export function Register() {
       <div className="w-full max-w-sm">
         <div className="mb-8 text-center">
           <h1 className="font-display text-3xl font-semibold tracking-tight">
-            Start your ledger
+            Start your ledger (CI/CD Test!)
           </h1>
           <p className="mt-2 text-sm text-slate">
             Track habits, build streaks, see your progress.
